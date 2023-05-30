@@ -1,3 +1,4 @@
+import { CurrentUser, Public } from '@infra/decorators';
 import {
   Body,
   Controller,
@@ -16,19 +17,25 @@ import { UsersService } from '../providers';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Public()
   @Post()
   create(@Body() data: CreateUserDto) {
     return this.usersService.create(data);
   }
 
-  @Get('/:id')
-  findById(@Param('id') id: string) {
+  @Get('/me')
+  me(@CurrentUser() { id }) {
     return this.usersService.findById(id);
   }
 
   @Get()
   findMany(@Query() query: UpdateUserDto) {
     return this.usersService.findMany(query);
+  }
+
+  @Get('/:id')
+  findById(@Param('id') id: string) {
+    return this.usersService.findById(id);
   }
 
   @Patch('/:id')
